@@ -1,0 +1,126 @@
+基数排序（10分）
+题目内容：
+实现一个基数排序算法，用于10进制的正整数从小到大的排序。
+思路是保持10个队列(队列0、队列1......队列9、队列main)，开始，所有的数都在main队列，没有排序。
+第一趟将所有的数根据其10进制个位(0~9)，放入相应的队列0~9，全放好后，按照FIFO的顺序，将每个队列的数合并排到main队列。
+第二趟再从main队列队首取数，根据其十位的数值，放入相应队列0~9，全放好后，仍然按照FIFO的顺序，将每个队列的数合并排到main队列。
+第三趟放百位，再合并；第四趟放千位，再合并。
+直到最多的位数放完，合并完，这样main队列里就是排好序的数列了。
+
+输入格式:
+一个列表mylist，其中mylist包含一些需要排序的正整数，正整数互不相同且均不超过100000，且个数在1至1000之间。
+
+输出格式：
+一个与mylist等长的列表。
+
+输入样例：
+[8, 91, 34, 22, 65, 30, 4, 55, 18]
+
+输出样例：
+[4, 8, 18, 22, 30, 34, 55, 65, 91]
+
+解题思路：见题目内容
+
+我的代码（满分）：
+
+class Queue:
+    def __init__(self):
+        self.items = []
+
+    def isEmpty(self):
+        return self.items == []
+
+    def enqueue(self, item):
+        self.items.insert(0,item)
+
+    def dequeue(self):
+        return self.items.pop()
+
+    def size(self):
+        return len(self.items)
+    
+    def head(self):
+        return self.items[self.size() - 1]
+    
+    def tail(self):
+        return self.items[0]
+    
+def func(mylist):
+    # your code here
+    q0 = Queue()
+    q1 = Queue()
+    q2 = Queue()
+    q3 = Queue()
+    q4 = Queue()
+    q5 = Queue()
+    q6 = Queue()
+    q7 = Queue()
+    q8 = Queue()
+    q9 = Queue()
+    main = Queue()
+    L = len(mylist)
+    output = list(range(L))
+    currmax = 0
+    for i in range(L):
+        main.enqueue(mylist[i])
+        if mylist[i] > currmax:
+            currmax = mylist[i]
+    digit = 0
+    while currmax > 0:
+        currmax = int(currmax/10)
+        digit = digit + 1
+    
+    for i in range(1,digit+1):
+        while main.isEmpty() == False:
+            sign = int((main.head()%pow(10,i))/pow(10,i-1))
+            if sign == 0:
+                q0.enqueue(main.dequeue())
+            elif sign == 1:
+                q1.enqueue(main.dequeue())
+            elif sign == 2:
+                q2.enqueue(main.dequeue())
+            elif sign == 3:
+                q3.enqueue(main.dequeue())
+            elif sign == 4:
+                q4.enqueue(main.dequeue())
+            elif sign == 5:
+                q5.enqueue(main.dequeue())
+            elif sign == 6:
+                q6.enqueue(main.dequeue())
+            elif sign == 7:
+                q7.enqueue(main.dequeue())
+            elif sign == 8:
+                q8.enqueue(main.dequeue())
+            else:
+                q9.enqueue(main.dequeue())
+                
+        for k in range(10):
+            while q0.isEmpty() == False:
+                main.enqueue(q0.dequeue())
+            while q1.isEmpty() == False:
+                main.enqueue(q1.dequeue())
+            while q2.isEmpty() == False:
+                main.enqueue(q2.dequeue())
+            while q3.isEmpty() == False:
+                main.enqueue(q3.dequeue())
+            while q4.isEmpty() == False:
+                main.enqueue(q4.dequeue())
+            while q5.isEmpty() == False:
+                main.enqueue(q5.dequeue())
+            while q6.isEmpty() == False:
+                main.enqueue(q6.dequeue())
+            while q7.isEmpty() == False:
+                main.enqueue(q7.dequeue())
+            while q8.isEmpty() == False:
+                main.enqueue(q8.dequeue())
+            while q9.isEmpty() == False:
+                main.enqueue(q9.dequeue())
+                
+    for i in range(L):
+        output[i] = main.dequeue()
+    
+        
+    return output
+     
+mylist = eval(input())
+print(func(mylist))
