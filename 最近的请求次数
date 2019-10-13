@@ -1,0 +1,75 @@
+最近的请求次数（10分）
+题目内容：
+计算每个事件发生之时，往前算10000毫秒内有多少个事件发生，包含当事件；也即对于列表中的每个元素k，算出整个列表中有多少个元素介于k-10000和k（两端均含）之间。
+
+输入格式:
+一个已排序列表mylist，所有元素为非负整数，记录各个请求的发生时间，单位为毫秒。
+
+输出格式：
+一个与mylist等长的列表。
+
+输入样例：
+[0,10,100,1000,10000,20000,100000]
+
+输出样例：
+[1,2,3,4,5,2,1]
+
+解题思路：
+使用队列的先进先出功能，在每次入队一个元素S时，判断队头的元素是否在[S, S-10000]内，如不在就令其出队。
+从而始终保持队列中元素的跨度在10000内，每次返回队列size即为当前元素的请求次数。
+
+我的代码（8/10，用例3特殊值还没通过）：
+
+class Queue:
+    def __init__(self):
+        self.items = []
+
+    def isEmpty(self):
+        return self.items == []
+
+    def enqueue(self, item):
+        self.items.insert(0,item)
+
+    def dequeue(self):
+        return self.items.pop()
+
+    def size(self):
+        return len(self.items)
+    
+    def head(self):
+        return self.items[self.size() - 1]
+    
+    def tail(self):
+        return self.items[0]
+    
+def func(mylist):
+    # your code here
+    queue = Queue()
+    L = len(mylist)
+    output = list(range(L))
+    repeat_count = 0
+    queue.enqueue(mylist[0])
+    output[0] = 1
+    i = 1
+    while i < L:
+        
+        if mylist[i] == queue.tail():
+            repeat_count = repeat_count + 1
+        else:
+            repeat_count = 0
+        queue.enqueue(mylist[i])
+        
+        if mylist[i] >= 10000:
+            limit = mylist[i] - 10000
+        else:
+            limit = 0
+        while (limit > queue.head()):
+            queue.dequeue()
+        
+        
+        output[i] = queue.size() - repeat_count
+        i = i + 1
+    
+    return output
+mylist = eval(input())
+print(func(mylist))
