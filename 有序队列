@@ -1,0 +1,43 @@
+有序队列（10分）
+题目内容：
+一开始给出了一个由小写字母组成的字符串 S。我们规定每次移动中，选择最左侧的字母，将其从原位置移除，并加到字符串的末尾。这样的移动可以执行任意多次
+返回我们移动之后可以拥有的最小字符串（注：在Python3中，字符串的大小可用不等号比较）。
+
+输入格式:
+S。S为仅含有小写字母的字符串，长度不超过100000。
+
+输出格式：
+一个与S等长的字符串。
+
+输入样例：
+"cba"
+
+输出样例：
+acb
+
+题目分析：最重要的一点是，注意到每次字符串移动，其实并不需要真的移动左右的数组元素，只需要移动head_index即可。这样可以避免很多不必要的数组赋值和元素移动，
+从而大大降低算法的时间复杂度。
+
+
+
+我的代码（满分）：
+def func(S):
+    # your code here
+    q1 = ""
+    L = len(S)
+    final_head_index = 0
+    curr_head_index = 0
+    for i in range(L):
+        q1 += S[i]
+        
+    for j in range(L):
+        curr_head_index = curr_head_index + 1
+        if(q1[curr_head_index:] + q1[0:curr_head_index] 
+        < q1[final_head_index:] + q1[0:final_head_index]):
+            final_head_index = curr_head_index
+            
+    return q1[final_head_index:] + q1[0:final_head_index]
+     
+S = eval(input())
+print(func(S))
+
