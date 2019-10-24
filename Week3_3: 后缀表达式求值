@@ -1,0 +1,100 @@
+题目内容：
+
+根据后缀表达式表示法，求表达式的值。
+
+有效的运算符包括 +, -, *, / ；其中除法仅保留整数结果。
+
+若出现除数为0或表达式非法的情况，输出"NaN"
+
+注：
+
+每个数字token可包含多位，也可为负数
+
+除法统一使用 int(a / b) 而非 a // b 进行计算
+
+输入格式:
+
+一行字符串，每个token间以空格分隔
+
+输出格式：
+
+一行，包含一个整数或"NaN"
+
+输入样例：
+
+"4 13 5 / +"
+
+输出样例：
+
+6
+
+思路：后缀表达式求值，先把从左到右把字符入栈，当字符为运算符时，从栈中弹出俩个数字进行计算，再将计算结果入栈。非常经典的栈应用。
+
+代码（满分）如下：
+class Stack:
+    def __init__(self):
+        self.items = []
+
+    def isEmpty(self):
+        return self.items == []
+
+    def push(self, item):
+        self.items.append(item)
+
+    def pop(self):
+        return self.items.pop()
+
+    def peek(self):
+        return self.items[len(self.items)-1]
+
+    def size(self):
+        return len(self.items)
+    
+def calc(tokens):
+    s = Stack()
+    L = len(tokens)
+    numberNum = 0
+    operateNum = 0
+    for i in range(L):
+        symbol = tokens[i]
+        if symbol in "+-*/":
+            operateNum = operateNum + 1
+        else:
+            numberNum = numberNum + 1
+
+        
+    if numberNum != operateNum + 1:
+        return "NaN"
+    
+    for i in range(L):
+        symbol = tokens[i]
+        if symbol in "+-*/":
+            if s.isEmpty():
+                return "NaN"
+            operate2 = s.pop()
+            if s.isEmpty():
+                return "NaN"
+            operate1 = s.pop()
+            if symbol == "/" and operate2 == 0:
+                return "NaN"
+            s.push(doMath(symbol,operate1,operate2))
+        else:
+            s.push(tokens[i])
+            
+    return s.pop()
+        
+def doMath(symbol, operate1, operate2):
+    operate1 = int(operate1)
+    operate2 = int(operate2)
+    if symbol == "+":
+        return operate1 + operate2
+    elif symbol == "-":
+        return operate1 - operate2
+    elif symbol == "/":
+        return int(operate1/operate2)
+    else:
+        return operate1*operate2
+        
+    
+    
+print(calc(input().split()))
