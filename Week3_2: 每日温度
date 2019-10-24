@@ -1,0 +1,42 @@
+题目内容：
+
+根据每日气温列表，请重新生成一个列表，对应位置的输入是你需要再等待多久温度才会升高超过该日的天数。如果之后都不会升高，请在该位置用 0 来代替
+
+输入格式:
+
+一行以Python表达式格式给出的列表，包含数个整数
+
+输出格式：
+
+整数组成的列表，直接使用print输出
+
+输入样例：
+
+[73, 74, 75, 71, 69, 72, 76, 73]
+
+输出样例：
+
+[1, 1, 4, 2, 1, 1, 0, 0]
+
+思路：维护一个time数组，记录每天所需要的目标天数。对于当下某天（如样例中的73）向后遍历，
+若遇到比自己温度高的数字，则更新time数组，更新值即为下标之差。
+
+代码（满分）如下：
+def dailyTemp(T):
+    L = len(T)
+    copy = list(range(L))
+    time = list(range(L))
+    for i in range(L):
+        copy[i] = T[i]
+        time[i] = 0
+    for j in range(L):
+        curr = copy[j]  
+        for k in range(j+1,L):
+            if copy[k] > curr:
+                time[j] = k - j
+                break
+                            
+    return time
+              
+t = eval(input())
+print(dailyTemp(t))
