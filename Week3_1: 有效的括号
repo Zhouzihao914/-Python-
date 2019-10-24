@@ -1,0 +1,84 @@
+题目内容：
+
+给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串，判断字符串是否有效。
+
+有效字符串需满足：
+
+左括号必须用相同类型的右括号闭合。
+
+左括号必须以正确的顺序闭合。
+
+注意空字符串可被认为是有效字符串。
+
+
+输入格式:
+
+一行字符串
+
+
+输出格式：
+
+True或False，表示该输入是否为合法括号串
+
+
+输入样例：
+
+([])
+
+
+输出样例：
+
+True
+
+思考： 基本数据类型栈的应用。当遇到左括号的时候，入栈。当遇到右括号的时候，出栈，并判断是否与当前右括号匹配，若不匹配，可直接返回该字符串无效。
+当所有符号读完时，栈空则表明字符串有效，反之则字符串无效。
+
+代码（满分）如下：
+
+class Stack:
+    def __init__(self):
+        self.items = []
+
+    def isEmpty(self):
+        return self.items == []
+
+    def push(self, item):
+        self.items.append(item)
+
+    def pop(self):
+        return self.items.pop()
+
+    def peek(self):
+        return self.items[len(self.items)-1]
+
+    def size(self):
+        return len(self.items)
+
+
+def isValid(symbolString):
+    s = Stack()
+    balanced = True
+    index = 0
+    while index < len(symbolString) and balanced:
+        symbol = symbolString[index]
+        if symbol in "([{":
+            s.push(symbol)
+        else:
+            if s.isEmpty():
+                balanced = False
+            else:
+                left = s.pop()
+                right = symbol
+                open = "([{"
+                close = ")]}"
+                if not open.index(left) == close.index(right):
+                    balanced = False
+                    
+        index = index + 1
+        
+    if balanced and s.isEmpty():
+        return True
+    else:
+        return False
+
+print(isValid(input()))
