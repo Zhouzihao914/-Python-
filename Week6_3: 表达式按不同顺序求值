@@ -1,0 +1,95 @@
+题目内容：
+
+给定一个表达式字符串，求出按不同的求值顺序可能得到的所有结果
+
+
+输入格式:
+
+一行字符串，仅包含0-9与运算符+、-与*
+
+注：字符串保证三种运算符左右均为数字字符
+
+
+输出格式：
+
+所有不重复的可能的结果，从小到大排序并以半角逗号","分隔
+
+
+输入样例：
+
+2*3-4*5
+
+
+输出样例：
+
+-34,-14,-10,10
+
+
+思考：还是递归分而治之的思想。比如例子“2*3-4*5”，若把“-”看成当前对象，所有可能数值 = “-”左侧算式的所有可能值 * “-”右侧所有可能值。
+这样就达到了递归的第一个要求：减小问题规模。
+再寻找最小结束条件，当目前算符是唯一算符时，直接返回该计算的值。或者，当目前数字是唯一数字时，直接返回该数字。
+
+代码（满分）如下：
+
+def findWays(expr):
+    # 用于将字符串转为数字与运算符，供参考
+    nums, ops = [], []
+    num = 0
+    for c in expr:
+        if '0' <= c <= '9':
+            num = num * 10 + ord(c) - 48
+        else:
+            ops.append(c)
+            nums.append(num)
+            num = 0
+    else:
+        nums.append(num)
+    
+    return findValue(nums,ops)
+    
+
+
+def findValue(nums,ops):
+    # code here
+    L_ops = len(ops)
+    L_nums = len(nums)
+    if L_ops == 1:
+        return [int(calculate(ops[0],nums[0],nums[1]))]
+    if L_nums == 1:
+        return [int(nums[0])]
+    
+    res = list()
+    for i in range(L_ops):
+        left = findValue(nums[0:i+1],ops[0:i])
+        right = findValue(nums[i+1:],ops[i+1:])
+        for l in left:
+            for r in right:
+                res.append(calculate(ops[i],l,r))
+    return unique(res)
+        
+
+def calculate(ops,num1,num2):
+    if ops == '+':
+        return num1+num2
+    elif ops == '-':
+        return num1-num2
+    else:
+        return num1*num2
+        
+def unique(old_list):
+    newlist = []
+    for c in old_list:
+        if c not in newlist:
+            newlist.append(c)
+    newlist.sort()
+    return newlist
+        
+ 
+expr=input()
+result = findWays(expr)
+L = len(result)
+for i in range(L):
+    if i == L-1:
+        print(result[i])
+    else:
+        print(result[i], end=',')
